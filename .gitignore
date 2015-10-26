@@ -1,0 +1,4 @@
+.idea/
+target/
+GoogleMail.iml
+src/test/resources/jbehave/googlemail/jbehave/
