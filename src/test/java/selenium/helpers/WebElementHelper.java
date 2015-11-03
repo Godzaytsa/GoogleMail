@@ -52,10 +52,11 @@ public class WebElementHelper {
 
     public static Boolean isTextPresentInElement(WebElement element, long timeOutInSeconds) {
         SystemClock clock = new SystemClock();
-        long endTime = clock.laterBy(timeOutInSeconds);
+        long endTime = clock.laterBy(timeOutInSeconds * 1000);
         do {
-            if (! element.getText().isEmpty())
+            if (! element.getText().trim().isEmpty()) {
                 return true;
+            }
         } while (clock.isNowBefore(endTime));
         return false;
     }

@@ -41,7 +41,7 @@ public class LoginPage {
         this.driver = driver;
 
         try {
-            WebElementHelper.waitForElement(driver, homePageCaptionLocator, 30);
+            WebElementHelper.waitForElement(driver, homePageCaptionLocator, 3);
         }
         catch (NoSuchElementException e) {
             throw new IllegalStateException("This is not Login page.");
@@ -54,7 +54,7 @@ public class LoginPage {
     }
 
     private void typePassword(String password) {
-        WebElementHelper.waitForElement(driver, passwordLocator, 10);
+        WebElementHelper.waitForElement(driver, passwordLocator, 1);
         passwordLocator.clear();
         passwordLocator.sendKeys(password);
     }
@@ -70,7 +70,7 @@ public class LoginPage {
     }
 
     public String getLoginErrorMessage() {
-        WebElementHelper.isTextPresentInElement(userErrorLocator, 5);
+        WebElementHelper.isTextPresentInElement(userErrorLocator, 1);
         return userErrorLocator.getText();
     }
 

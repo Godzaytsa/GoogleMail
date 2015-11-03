@@ -1,11 +1,16 @@
 package tests.junit.googlemail;
 
 import static org.junit.Assert.assertEquals;
+
+import helpers.googlemail.api.GoogleMailClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import selenium.helpers.User;
+import helpers.DateTime;
+import helpers.EmailAddress;
+import helpers.User;
+
 import selenium.googlemail.pages.HomePage;
 import selenium.googlemail.pages.LoginPage;
 import selenium.wrappers.WebDriver;
@@ -19,10 +24,9 @@ public class GoogleMailTest {
 
     @Before
     public void setup() {
-        driver = new WebDriver(WebDriver.FIREFOX);
-        //driver = new Driver(Driver.CHROME, "d:\\Projects\\Selenium\\WebDrivers\\chromedriver.exe");
-        //driver = new Driver(Driver.IE, "d:\\Projects\\Selenium\\WebDrivers\\IEDriverServer.exe");
-        //driver = new WebDriver(WebDriver.HTMLUNIT);
+        //driver = new WebDriver(WebDriver.FIREFOX);
+        driver = new WebDriver(WebDriver.CHROME, "d:\\Projects\\Selenium\\WebDrivers\\chromedriver.exe");
+        //driver = new WebDriver(WebDriver.IE, "d:\\Projects\\Selenium\\WebDrivers\\IEDriverServer.exe");
         driver.get("http://mail.google.com");
     }
 
@@ -45,13 +49,27 @@ public class GoogleMailTest {
             loginPage.loginAs(User.email);
             HomePage homePage = loginPage.submitPassword(User.password, false);
 
-            // Click 'Compose' button and send an email
-            homePage.composeEmail().sendEmail("gadzilla.test@gmail.com", "Test", "Test");
+            // Generate email address (based on original email address) to which we will send new email
+            EmailAddress email = new EmailAddress(User.email);
+            String sendTo = email.getUserName() + "+" + DateTime.getCurrentTime("YYYY-MM-dd-hh-mm-ss") + "@" + email.getDomain();
 
+            // Click 'Compose' button and send an email
+            homePage.composeEmail().sendEmail(sendTo, "Test", "Test",
+                                              System.getProperty("user.dir") + "\\src\\test\\resources\\testfiles\\test.pdf");
+
+            // Check that message has been send.
+            assertEquals("Your message has been sent. View message", homePage.getNotificationMessage());
+
+            // Find out message that was send and download all attachments from this email
+            GoogleMailClient gmc = new GoogleMailClient();
+            gmc.login(User.email, User.password);
+            gmc.downloadAllAttachmentsSentToUser(sendTo, System.getProperty("user.dir") + "\\src\\test\\resources\\temp");
+            gmc.logout();
         }
         catch(Exception e) {
             System.out.println(driver.getTitle() + "; " + driver.getCurrentUrl());
             System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
             System.out.println("Test failed.");
         }
     }

@@ -23,8 +23,9 @@ Scenario: User compose an email
 Given Gmail Home page is opened
 When User clicks Compose button on Home page
 Then New Email window is opened
-When User type gadzilla.test@gmail.com in To field
+When User attach \src\test\resources\testfiles\test.pdf file
+And User type gadzilla.test+YYYY-MM-dd-hh-mm-ss@gmail.com in To field
 And User type Test in Subject field
 And User type Test in Email body field
 And User clicks Send button
-Then email with Test subject is send to gadzilla.test@gmail.com
+Then "Your message has been sent. View message" notification message appears on Gmail Home page

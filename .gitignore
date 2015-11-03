@@ -2,3 +2,4 @@
 target/
 GoogleMail.iml
 src/test/resources/jbehave/googlemail/jbehave/
+src/test/resources/temp
